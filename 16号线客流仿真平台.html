@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <title>16号线</title>
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.2/echarts.min.js"></script>
+    <script src="js/bmap.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=g6mYhfdSmCAmdGO0SBUwm4SuntHadMkO"></script>
+</head>
+
+<body>
+    <div id="container">
+	</div>
+		<div class="left-box">
+					<ul>
+		                <li class="item active">
+		                    <i class="icon icon-file"></i>
+		                    开关
+							<div class="container1">
+							        <label>
+							            <input type="checkbox" hidden>
+							            <span></span>
+							            <i class="indicator"></i>
+							        </label>
+							</div>
+		                </li>
+		                <li class="item">
+		                    <i class="icon icon-album"></i>
+		                    倍速
+							<select id="selector">
+								<option value="1000">1倍速</option>
+							    <option value="100">5倍速</option>
+							    <option value="10">10倍速</option>
+							</select>
+		                </li>
+		                <li class="item">
+		                    <i class="icon icon-like"></i>
+		                    时间段
+							<select id="selector2">
+							     <!--<option>ALL</option>-->
+							    <option value=0>6:00-7:00</option>
+							    <option value=1>7:00-8:00</option>
+							    <option value=2>8:00-9:00</option>
+								<option value=3>9:00-10:00</option>
+								<option value=4>10:00-11:00</option>
+								<option value=5>11:00-12:00</option>
+							</select>
+		                </li>
+		                
+		            </ul>
+		</div>
+		<script src="js/charts.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>
