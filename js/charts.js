@@ -703,108 +703,6 @@
 									]},
 			options:[]};
 		myChart.setOption(option);
-		$(function() {
-		    $('#selector2').on('change', function() {
-		        var val = $(this).val();
-				var a=[[0,3600],[3600,7200],[7200,10800],[10800,14400],[14400,18000],[18000,21599]]
-				var b=[
-					['6:00','6:05','6:10','6:15','6:20','6:25','6:30','6:35','6:40','6:45','6:50','6:55'],
-					['7:00','7:05','7:10','7:15','7:20','7:25','7:30','7:35','7:40','7:45','7:50','7:55'],
-					['8:00','8:05','8:10','8:15','8:20','8:25','8:30','8:35','8:40','8:45','8:50','8:55'],
-					['9:00','9:05','9:10','9:15','9:20','9:25','9:30','9:35','9:40','9:45','9:50','9:55'],
-					['10:00','10:05','10:10','10:15','10:20','10:25','10:30','10:35','10:40','10:45','10:50','10:55'],
-					['11:00','11:05','11:10','11:15','11:20','11:25','11:30','11:35','11:40','11:45','11:50','11:55']
-				]
-				option.baseOption.xAxis[1].data=b[val]
-				var k=a[val][0],len=a[val][1]
-				$.get('js/进出.json', function (data1) {
-					var obj=[]
-					var time=[]
-					var title=[],i=0
-					data1.forEach(item => {
-					    if (!obj[item.PERIODINDEX]) {
-					      obj[item.PERIODINDEX] = [item]
-					    } else {
-					      obj[item.PERIODINDEX].push(item)
-					    }
-					  })
-					var l1=len
-					var in2=[],out2=[],tranin2=[],tranout2=[]
-					for(var n=k;n<l1;n++){
-						time[i]=obj[n][0].time
-						option.options[i].series[0].data=convertData2(obj[n])
-						var a=convertData2(obj[n])
-						var in1=0,out=0,tranin=0,tranout=0
-						for(j=0;j<13;j++){
-							in1=in1+Number(a[j].value[3])
-							out=out+Number(a[j].value[4])
-							tranin+=Number(a[j].value[5])
-							tranout+=Number(a[j].value[6])
-						}
-						if(n==0 || (n)%300==0){
-							in2.push(in1)
-							out2.push(out)
-							tranin2.push(tranin)
-							tranout2.push(tranout)
-						}
-						option.options[i].series[5].data=in2
-						option.options[i].series[6].data=out2
-						option.options[i].series[7].data=tranin2
-						option.options[i].series[8].data=tranout2
-						var datas=[in1,out,tranin,tranout]
-						var test=[]
-						test.push(
-						{
-							text:"16号线客流仿真平台",
-							subtext:'时间'+':'+obj[n][1].time
-						})
-						test.push(
-						{
-							text:"进出站与换乘",
-							subtext:obj[n][1].timezoom
-						})
-						option.options[i].title=test
-						option.options[i].series[4].data=datas
-						i+=1
-					}
-					option.baseOption.timeline.data=time
-					myChart.setOption(option);
-				   })
-				$.get('js/subway.json',function(data){
-					for(var i=0;i<3600;i++){
-						option.options.push({
-							title:{show:true},
-						    series: [{},{},{},{}]
-						});
-					}
-					var obj=[]
-					data.forEach(item => {
-					    if (!obj[item.PERIODINDEX]) {
-					      obj[item.PERIODINDEX] = [item]
-					    } else {
-					      obj[item.PERIODINDEX].push(item)
-					    }
-					  })
-					var i=0,l2=len
-					for(var m=k;m<l2;m++){
-						var stop=[],move=[]
-						for(var j=0;j<obj[m].length;j++){
-							if(obj[m][j].stop==1){
-								stop.push(obj[m][j])
-							}
-							else{
-								move.push(obj[m][j])
-							}
-						}
-						option.options[i].series[1].data = convertData3(obj[m])
-						option.options[i].series[2].data = convertData1(move)
-						option.options[i].series[3].data = convertData4(stop)
-						i+=1
-					}
-					myChart.setOption(option);
-				})
-		    });
-		});	
 		var speed=1000
 		$('input[type="checkbox"]').click(function() {
 			if ($(this).is(":checked")== true) {
@@ -822,8 +720,9 @@
 		    });
 		});	
 		
+		var obj=[]
 		$.get('js/进出.json', function (data) {
-			var obj=[]
+			
 			var time=[]
 			var title=[]
 			Object.freeze(data)
@@ -881,37 +780,105 @@
 			option.baseOption.timeline.data=time
 			myChart.setOption(option);
 		   })
+		var obj2=[]  
 		$.get('js/subway.json',function(data){
-			for(var i=0;i<3600;i++){
-				option.options.push({
-					title:{show:true},
-				    series: [{},{},{},{},{},{}]
-				});
-			}
-			var obj=[]
 			data.forEach(item => {
-			    if (!obj[item.PERIODINDEX]) {
-			      obj[item.PERIODINDEX] = [item]
+			    if (!obj2[item.PERIODINDEX]) {
+			      obj2[item.PERIODINDEX] = [item]
 			    } else {
-			      obj[item.PERIODINDEX].push(item)
+			      obj2[item.PERIODINDEX].push(item)
 			    }
 			  })
 			for(i=0;i<3600;i++){
 				var stop=[],move=[]
-				for(var j=0;j<obj[i].length;j++){
-					if(obj[i][j].stop==1){
-						stop.push(obj[i][j])
+				for(var j=0;j<obj2[i].length;j++){
+					if(obj2[i][j].stop==1){
+						stop.push(obj2[i][j])
 					}
 					else{
-						move.push(obj[i][j])
+						move.push(obj2[i][j])
 					}
 				}
-				option.options[i].series[1].data = convertData3(obj[i])
+				option.options[i].series[1].data = convertData3(obj2[i])
 				option.options[i].series[2].data = convertData1(move)
 				option.options[i].series[3].data = convertData4(stop)
 			}
 			myChart.setOption(option);
 		})		
+		$(function() {
+		    $('#selector2').on('change', function() {
+		        var val = $(this).val();
+				var a=[[0,3600],[3600,7200],[7200,10800],[10800,14400],[14400,18000],[18000,21599]]
+				var b=[
+					['6:00','6:05','6:10','6:15','6:20','6:25','6:30','6:35','6:40','6:45','6:50','6:55'],
+					['7:00','7:05','7:10','7:15','7:20','7:25','7:30','7:35','7:40','7:45','7:50','7:55'],
+					['8:00','8:05','8:10','8:15','8:20','8:25','8:30','8:35','8:40','8:45','8:50','8:55'],
+					['9:00','9:05','9:10','9:15','9:20','9:25','9:30','9:35','9:40','9:45','9:50','9:55'],
+					['10:00','10:05','10:10','10:15','10:20','10:25','10:30','10:35','10:40','10:45','10:50','10:55'],
+					['11:00','11:05','11:10','11:15','11:20','11:25','11:30','11:35','11:40','11:45','11:50','11:55']
+				]
+				option.baseOption.xAxis[1].data=b[val]
+				var k=a[val][0],len=a[val][1]
+					var l1=len,time=[],i=0
+					var in2=[],out2=[],tranin2=[],tranout2=[]
+					for(var n=k;n<l1;n++){
+						time[i]=obj[n][0].time
+						option.options[i].series[0].data=convertData2(obj[n])
+						var a=convertData2(obj[n])
+						var in1=0,out=0,tranin=0,tranout=0
+						for(j=0;j<13;j++){
+							in1=in1+Number(a[j].value[3])
+							out=out+Number(a[j].value[4])
+							tranin+=Number(a[j].value[5])
+							tranout+=Number(a[j].value[6])
+						}
+						if(n==0 || (n)%300==0){
+							in2.push(in1)
+							out2.push(out)
+							tranin2.push(tranin)
+							tranout2.push(tranout)
+						}
+						option.options[i].series[5].data=in2
+						option.options[i].series[6].data=out2
+						option.options[i].series[7].data=tranin2
+						option.options[i].series[8].data=tranout2
+						var datas=[in1,out,tranin,tranout]
+						var test=[]
+						test.push(
+						{
+							text:"16号线客流仿真平台",
+							subtext:'时间'+':'+obj[n][1].time
+						})
+						test.push(
+						{
+							text:"进出站与换乘",
+							subtext:obj[n][1].timezoom
+						})
+						option.options[i].title=test
+						option.options[i].series[4].data=datas
+						i+=1
+					}
+					option.baseOption.timeline.data=time
+		
+					var i=0,l2=len
+					for(var m=k;m<l2;m++){
+						var stop=[],move=[]
+						for(var j=0;j<obj2[m].length;j++){
+							if(obj2[m][j].stop==1){
+								stop.push(obj2[m][j])
+							}
+							else{
+								move.push(obj2[m][j])
+							}
+						}
+						option.options[i].series[1].data = convertData3(obj2[m])
+						option.options[i].series[2].data = convertData1(move)
+						option.options[i].series[3].data = convertData4(stop)
+						i+=1
+					}
+					myChart.setOption(option);
+		    });
+		});	
 
         var baiduMap = myChart.getModel().getComponent('bmap').getBMap();
 		let totalxia2=[
